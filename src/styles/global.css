@@ -1,0 +1,215 @@
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --text: #1d1b18;
+  --muted: #8e8d8c;
+  --border: #d9d4ca;
+  --accent: #0e6e6b;
+  --accent-contrast: #e8a33d;
+  --focus: #e8a33d;
+  --tag-bg: #fdf6ec;
+  --tag2-bg: #e7f1f0;
+  --radius: 14px;
+  --radius-large: 500px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.05);
+  --font-body: "Radio Canada", sans-serif;
+  --font-display: "Radio Canada Big", sans-serif;
+
+  color-scheme: light dark;
+
+  /* Font-sizes */
+
+  /* Step -2: 11.1111px → 12.8px */
+  --font-size--2: clamp(0.6944rem, 0.6577rem + 0.1836vw, 0.8rem);
+  /* Step -1: 13.3333px → 16px */
+  --font-size--1: clamp(0.8333rem, 0.7754rem + 0.2899vw, 1rem);
+  /* Step 0: 16px → 20px */
+  --font-size-0: clamp(1rem, 0.913rem + 0.4348vw, 1.25rem);
+  /* Step 1: 19.2px → 25px */
+  --font-size-1: clamp(1.2rem, 1.0739rem + 0.6304vw, 1.5625rem);
+  /* Step 2: 23.04px → 31.25px */
+  --font-size-2: clamp(1.44rem, 1.2615rem + 0.8924vw, 1.9531rem);
+  /* Step 3: 27.648px → 39.0625px */
+  --font-size-3: clamp(1.728rem, 1.4799rem + 1.2407vw, 2.4414rem);
+  /* Step 4: 33.1776px → 48.8281px */
+  --font-size-4: clamp(2.0736rem, 1.7334rem + 1.7011vw, 3.0518rem);
+  /* Step 5: 39.8131px → 61.0352px */
+  --font-size-5: clamp(2.4883rem, 2.027rem + 2.3067vw, 3.8147rem);
+
+  /* Spacing / general sizes */
+  /* Space 3xs: 4px → 5px */
+  --space-3xs: clamp(0.25rem, 0.2283rem + 0.1087vw, 0.3125rem);
+  /* Space 2xs: 8px → 10px */
+  --space-2xs: clamp(0.5rem, 0.4565rem + 0.2174vw, 0.625rem);
+  /* Space xs: 12px → 15px */
+  --space-xs: clamp(0.75rem, 0.6848rem + 0.3261vw, 0.9375rem);
+  /* Space s: 16px → 20px */
+  --space-s: clamp(1rem, 0.913rem + 0.4348vw, 1.25rem);
+  /* Space m: 24px → 30px */
+  --space-m: clamp(1.5rem, 1.3696rem + 0.6522vw, 1.875rem);
+  /* Space l: 32px → 40px */
+  --space-l: clamp(2rem, 1.8261rem + 0.8696vw, 2.5rem);
+  /* Space xl: 48px → 60px */
+  --space-xl: clamp(3rem, 2.7391rem + 1.3043vw, 3.75rem);
+  /* Space 2xl: 64px → 80px */
+  --space-2xl: clamp(4rem, 3.6522rem + 1.7391vw, 5rem);
+  /* Space 3xl: 96px → 120px */
+  --space-3xl: clamp(6rem, 5.4783rem + 2.6087vw, 7.5rem);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161513;
+    --surface: #201f1c;
+    --text: #f2efe9;
+    --muted: #b3ada3;
+    --border: #3a3732;
+    --accent: #5fb7bf;
+    --accent-contrast: #0d2a2d;
+    --tag-bg: #1d3537;
+    --tag-text: #b6e1e4;
+    --tag2-bg: #3a2f1d;
+    --tag2-text: #f0d6a6;
+    --focus: #fb923c;
+    --shadow: none;
+  }
+} */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html{
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  font-weight: 600;
+  text-wrap: balance;
+  color: var(--accent);
+}
+
+p,
+a,
+ul,
+li,
+figcaption {
+  text-wrap: pretty;
+}
+
+.container,
+.wrapper,
+.nav-wrapper {
+  width: min(1120px, 100% - 2rem);
+  margin-inline: auto;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+.chip {
+  background-color: var(--bg);
+  border-radius: var(--radius-large);
+}
+
+/* Tags (shared by cards and detail pages) */
+.tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+}
+.tag,
+.tag-beneficiaries {
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  background: var(--tag-bg);
+  outline: 1px solid var(--accent-contrast);
+  color: var(--body);
+}
+.tag-beneficiaries {
+  background: var(--tag2-bg);
+  outline: 1px solid var(--accent);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--accent);
+  color: var(--bg);
+  border: 2px solid var(--accent);
+}
+.button--ghost {
+  background: transparent;
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

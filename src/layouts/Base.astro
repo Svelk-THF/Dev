@@ -1,0 +1,75 @@
+---
+import "@fontsource-variable/fraunces/opsz.css";
+import "@fontsource-variable/source-sans-3";
+import "../styles/global.css";
+import Nav from "../components/Nav.astro"
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const siteName = "Taranaki Gives";
+const {
+  title,
+  description = "Find and support local nonprofits in Taranaki.",
+} = Astro.props;
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrapper">
+        <p>Donations go directly to each organisation. We don't take a cut.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding-block: 1rem;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .site-footer {
+    margin-top: 4rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+</style>

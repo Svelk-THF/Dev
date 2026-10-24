@@ -1,0 +1,74 @@
+---
+import "../styles/global.css"
+
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const siteName = "Taranaki Gives";
+const {
+  title,
+  description = "Find and support local nonprofits in Taranaki.",
+} = Astro.props;
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<nav>
+    <div class="nav-wrapper">
+ <a href="/" class="brand">{siteName}</a>
+ <a href="/resources" class="nav-item">Resources</a>
+    </div>
+</nav>
+
+<style>
+nav{
+    background: var(--surface);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--border);
+}
+
+    .nav-wrapper{
+        display: flex;
+        gap:var(--space-m);
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .brand{
+        font-family: var(--font-display);
+        color: var(--accent);
+        font-size: var(--font-size-3);
+        font-weight: 700;
+        text-decoration: none;
+    
+    }
+
+.nav-item{
+    position: relative;
+    text-decoration: none;
+    transition: all 0.25s ease-in;
+}
+
+.nav-item:hover{
+    font-weight: 700;
+}
+
+.nav-item::after{
+    content: "";
+    position: absolute;
+    height: 2px;
+    background: var(--accent);
+    width: 0%;
+    left: 0;
+    bottom: -2px;
+    transition: all 0.25s ease-in;
+}
+.nav-item:hover::after{
+    width: 100%;
+}
+
+
+</style>

@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('resources');
+  return articles.map((article) => ({
+    params: { id: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+---
+
+<Base title={article.data.article_title}>
+  <article class="wrapper">
+    <Image src={article.data.article_hero_image} alt="" />
+    <h1>{article.data.article_title}</h1>
+    <p>{article.data.article_author} · {article.data.article_readtime} minute read</p>
+    <Content />
+    <a href="/resources" class="breadbrumb">Back to articles --></a>
+  </article>
+</Base>

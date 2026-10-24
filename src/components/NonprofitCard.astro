@@ -1,0 +1,143 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import TagList from './TagList.astro';
+import placeholderLogo from '../assets/logos/placeholder.svg';
+
+interface Props {
+  entry: CollectionEntry<'nonprofits'>;
+}
+
+const { entry } = Astro.props;
+const { name, logo, logoAlt, sectors, beneficiaries, blurb, location } = entry.data;
+const href = `/nonprofits/${entry.id}/`;
+---
+
+<li
+  class="card"
+  data-name={name.toLowerCase()}
+  data-sectors={sectors.join(' ')}
+  data-beneficiaries={beneficiaries.join(' ')}
+>
+  <article>
+    <div class="card__head">
+      <Image
+        src={logo ?? placeholderLogo}
+        alt={logo ? (logoAlt ?? `${name} logo`) : ''}
+        
+        height={75}
+        class="card__logo"
+      />
+      <div>
+        <h2 class="card__title">
+          <a href={href}>{name}</a>
+        </h2>
+        {location && <p class="card__location">{location}</p>}
+      </div>
+    </div>
+    <p class="card__blurb">{blurb}</p>
+    <div class="card__tags">
+      <TagList sectors={sectors} />
+      <TagList beneficiaries={beneficiaries} />
+    </div>
+  </article>
+</li>
+
+<style>
+  .card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--space-m);  
+    
+    corner-shape: squircle;;
+    box-shadow: var(--shadow);
+    padding: var(--space-s);
+    transition:
+      border-color 0.25s,
+      transform 0.25s;
+  }
+  .card:hover,
+  .card:focus-within {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card[hidden] {
+    display: none;
+  }
+  .card__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;;
+    gap: var(--space-3xs);
+  }
+  .card__logo {
+    flex: none;
+    height: var(--space-xl);
+    width: auto;
+    object-fit: contain;
+    padding-bottom: var(--space-3xs);
+  }
+  .card__title {
+    font-size: var(--font-size-0);
+    margin: 0;
+  }
+  /* Stretched link: the whole card is clickable, but only the name is announced as the link */
+  .card__title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--space-3xs);
+  }
+  .card__title a:focus-visible {
+    outline: none;
+  }
+  .card__title a:focus-visible::after {
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .card__location {
+    margin: var(--space-3xs) 0 0;
+    font-size: 0.var(--font-size--1);
+    color: var(--muted);
+  }
+  .card__blurb {
+    margin: 1rem 0;
+    color: var(--body);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card__tags {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  /* List view (toggled on the parent grid) */
+  :global(.results[data-view='list']) .card article {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 2fr;
+    gap: 0 var(--space-s);
+    align-items: start;
+  }
+  :global(.results[data-view='list']) .card__head {
+    grid-row: span 2;
+  }
+  :global(.results[data-view='list']) .card__blurb {
+    margin-top: 0;
+  }
+  :global(.results[data-view='list']) .card__tags {
+    grid-column: 2;
+  }
+  @media (max-width: 640px) {
+    :global(.results[data-view='list']) .card article {
+      display: block;
+    }
+  }
+</style>

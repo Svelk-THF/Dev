@@ -1,0 +1,30 @@
+---
+import { BENEFICIARIES, SECTORS, type Beneficiaries, type Sector } from '../data/taxonomy';
+
+interface Props {
+  sectors?: Sector[];
+  beneficiaries?: Beneficiaries[];
+  label?: string;
+}
+
+const { sectors = [], beneficiaries = [], label } = Astro.props;
+---
+
+{
+  sectors.length > 0 && (
+    <ul class="tag-list" aria-label={label ?? 'Sectors'}>
+      {sectors.map((s) => (
+        <li class="tag">{SECTORS[s]}</li>
+      ))}
+    </ul>
+  )
+}
+{
+  beneficiaries.length > 0 && (
+    <ul class="tag-list" aria-label={label ?? 'Who you can help'}>
+      {beneficiaries.map((b) => (
+        <li class="tag-beneficiaries">{BENEFICIARIES[b]}</li>
+      ))}
+    </ul>
+  )
+}

@@ -1,0 +1,224 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+import TagList from "../../components/TagList.astro";
+import placeholderLogo from "../../assets/logos/placeholder.svg";
+
+export async function getStaticPaths() {
+  const nonprofits = await getCollection(
+    "nonprofits",
+    ({ data }) => !data.draft,
+  );
+  return nonprofits.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"nonprofits">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+// Links to the NZ Charities Register so visitors can verify the number themselves.
+const registerUrl = "https://register.charities.govt.nz/";
+---
+
+<Base title={d.name} description={d.blurb}>
+  <div class="wrapper">
+    <nav aria-label="Breadcrumb" class="breadcrumb">
+      <a href="/">← All nonprofits</a>
+    </nav>
+
+    <header class="profile-header">
+      <Image
+        src={d.logo ?? placeholderLogo}
+        alt={d.logo ? (d.logoAlt ?? `${d.name} logo`) : ""}
+  
+        class="profile-logo"
+      />
+      <div class="profile-description">
+        <h1>{d.name}</h1>
+        {d.location && <p class="location">{d.location}</p>}
+          <Content />
+      </div>
+    </header>
+    <main>
+      <aside class="sidebar" aria-labelledby="help-heading">
+        <div class="sidebar-col-1">
+          <h2 id="help-heading">Ways to help</h2>
+          <div class="actions">
+            {
+              d.donateUrl && (
+                <a class="button" href={d.donateUrl} rel="noopener">
+                  Donate to {d.name}
+                </a>
+              )
+            }
+          </div>
+        </div>
+        <div class="sidebar-col-2">
+          <div>
+            <h3>Sectors</h3>
+            <TagList sectors={d.sectors} />
+          </div>
+          <div>
+            <h3>Main Benefactors</h3>
+            <TagList beneficiaries={d.beneficiaries} />
+          </div>
+          <div>
+            <h3>Contact</h3>
+            <ul class="contact">
+              {
+                d.website && (
+                  <li>
+                    <a href={d.website} rel="noopener">
+                      Website
+                    </a>
+                  </li>
+                )
+              }
+              {
+                d.email && (
+                  <li>
+                    <a href={`mailto:${d.email}`}>{d.email}</a>
+                  </li>
+                )
+              }
+              {
+                d.phone && (
+                  <li>
+                    <a href={`tel:${d.phone.replace(/\s/g, "")}`}>{d.phone}</a>
+                  </li>
+                )
+              }
+              {
+                d.charitiesNumber && (
+                  <li>
+                    Registered charity{" "}
+                    <a href={registerUrl} rel="noopener">
+                      {d.charitiesNumber}
+                    </a>
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <p class="lede">{d.blurb}</p>
+    
+    </main>
+
+    </div>
+    
+</Base>
+
+<style>
+  .breadcrumb {
+    padding-block: 1.5rem;
+  }
+  .profile-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .profile-logo {
+    flex: none;
+    width: auto;
+    max-height: 96px;
+    object-fit: contain;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.75rem, 3vw + 1rem, 2.5rem);
+  }
+  .location {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+  }
+  .lede {
+    font-size: 1.125rem;
+    max-width: 60ch;
+    margin: 1rem 0 0;
+  }
+  .profile-body {
+    display: grid;
+    gap: 2.5rem;
+    padding-top: 2rem;
+    flex: 1 0 35ch;
+  }
+  @media (min-width: 860px) {
+    .profile-body {
+      grid-template-columns: 1fr 320px;
+    }
+    .sidebar {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+    }
+  }
+
+  .prose {
+    max-width: 65ch;
+  }
+  .prose :global(h2) {
+    margin-top: 2rem;
+  }
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    justify-content: space-between;
+    padding: 1.5rem;
+    gap: var(--space-m);
+  }
+
+  .sidebar-col-1 {
+  }
+
+  .sidebar-col-2 {
+    display: flex;
+    flex-wrap: wrap;;
+    gap: var(--space-s);
+  }
+
+  .sidebar h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+  }
+  .sidebar h3 {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 1.5rem 0 0.5rem;
+  }
+  .actions {
+    display: grid;
+    gap: 0.625rem;
+  }
+  .contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  @media (max-width: 520px) {
+    .profile-header {
+      flex-direction: column;
+    }
+  }
+</style>

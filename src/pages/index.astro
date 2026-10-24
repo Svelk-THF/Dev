@@ -1,16 +1,98 @@
 ---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import NonprofitCard from '../components/NonprofitCard.astro';
+import Filters from '../components/Filters.astro';
+import { shuffle } from '../lib/shuffle';
+
+// No listing gets a permanent top spot. The order is shuffled at build time
+// (so even visitors without JavaScript don't always see the "A" names first),
+// then shuffled again in the browser on every page load.
+const nonprofits = shuffle(await getCollection('nonprofits', ({ data }) => !data.draft));
+
+const sectorsInUse = new Set(nonprofits.flatMap((n) => n.data.sectors));
+const beneficiariesInUse = new Set(nonprofits.flatMap((n) => n.data.beneficiaries));
+
+
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <section class="hero">
+    <div class="wrapper">
+      <div class="hero-content">
+      <h1>Support the people doing good in Taranaki</h1>
+      <p>
+        Find local nonprofits by cause, or by who they help.
+      </p>
+    </div>
+    </div>
+  </section>
+
+  <section class="container" aria-labelledby="directory-heading">
+    <h2 id="directory-heading" class="visually-hidden">Nonprofit directory</h2>
+    <Filters sectorsInUse={sectorsInUse} beneficiariesInUse={beneficiariesInUse}/>
+
+    <ul class="results" data-view="grid">
+      {nonprofits.map((entry) => <NonprofitCard entry={entry} />)}
+    </ul>
+
+    <p id="no-results" class="no-results" hidden>
+      No nonprofits match those filters. Try removing one, or clear them all.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: 3rem 2rem;
+    background-image:url("../images/hero-image.jpg");
+    background-position: right;
+    background-size: cover;
+    height: 60vh;
+    display: flex;
+    align-items: center;;
+  }
+
+  .hero-content{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-5);
+    margin: 0 0 0.75rem;
+    max-width: 20ch;
+    color: var(--surface);
+  }
+  .hero p {
+    font-size: 1.125rem;
+    color: var(--surface);
+    max-width: 55ch;
+    margin: 0;
+  }
+  .results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+  .results[data-view='list'] {
+    grid-template-columns: 1fr;
+  }
+  .no-results {
+    padding: 2rem;
+    text-align: center;
+    color: var(--muted);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+  }
+  .no-results[hidden] {
+    display: none;
+  }
+
+  
+</style>

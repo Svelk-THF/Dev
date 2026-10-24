@@ -1,0 +1,98 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Base from "../../layouts/Base.astro";
+
+const articles = await getCollection("resources");
+---
+
+<Base title="Resources">
+  <div class="wrapper">
+    <h1>Resources</h1>
+    <ul class="article-list">
+      {
+        articles.map((article) => (
+            <a href={`/resources/${article.id}/`}>
+          <li class="article-card">
+              <Image
+                src={article.data.article_hero_image}
+                alt={article.data.article_hero_image_alt}
+                class="article-image"
+              />
+              <div class="article-info">
+              <h2 class="article-title">{article.data.article_title}</h2>
+              <p class="read-time">
+                {article.data.article_readtime} minute read
+              </p>
+              </div>
+          </li>
+            </a>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+
+ 
+  .article-list {
+    list-style: none;
+    padding-inline: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-m);
+    justify-content: space-between;
+  }
+
+   .article-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--space-m);
+    corner-shape: squircle;
+    display: flex;
+    flex-direction: column;
+     transition:
+      border-color 0.25s,
+      transform 0.25s;
+  }
+
+    .article-card:hover,
+  .article-card:focus-within {
+    border-color: var(--accent-contrast);
+    transform: translateY(-2px);
+  }
+  
+
+  .article-image{
+    max-height: 200px; 
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--space-m) var(--space-m) 0 0;
+    corner-shape: squircle;
+    }
+
+  .article-info{
+    padding-inline: var(--space-xs);
+    display: grid;
+   grid-template-rows: 1fr auto;
+   align-items: stretch
+   height: auto;
+  
+  }
+
+  .article-title{
+    font-size: var(--font-size-0);
+  }
+
+  .read-time{
+    color: var(--muted);
+    text-decoration: none;
+    align-self:baseline;
+     flex: 1 0 0;
+  }
+
+  li a{
+    text-decoration: none;
+  }
+</style>
